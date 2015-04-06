@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,6 +10,7 @@
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?AIzaSyBf5Ckdi62zjuvWYNozKF1gNdKmxYiR738"></script>
         <script type="text/javascript" src="jquery.min.js"></script>
         <script type="text/javascript" src="mapa.js"></script>
+        <script type="text/javascript" src="removeDiacritics.js"></script>
         <script type="text/javascript" src="jquery-ui.custom.min.js"></script>
 
     </head>
@@ -24,15 +25,19 @@
                     <legend>Class mashups: google maps api x pipes</legend>    
             
                     <div class="campos">
-                        <label for="txtEndereco">Adress:</label>
+                        <label for="txtEndereco">Address:</label>
                         <input type="text" id="txtEndereco" name="txtEndereco" />
                         <input type="button" id="btnEndereco" name="btnEndereco" value="Show in Maps" />
                     </div>
 
                     <div id="mapa"></div>
                     
-                	<input type="submit" value="Submit" name="btnEnviar" />
+                    <div id="dados">
+                        <div id="select">Please, select a city in Rio Grande do Sul in the search above</div>
+                    </div>
                     
+                	<input type="submit" value="Submit" name="btnEnviar" />
+                    <input type="hidden" id="txtCidade" name="txtCidade" />
                     <input type="hidden" id="txtLatitude" name="txtLatitude" />
                     <input type="hidden" id="txtLongitude" name="txtLongitude" />
 
