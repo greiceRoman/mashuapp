@@ -3,6 +3,8 @@ var map;
 var marker;
 var infowindow;
 
+var dataUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=ee2d949b89cf1b7c10739b6bda534f73&_render=json&_callback=dataLoaded&city=";
+
 function initialize() {
 	var latlng = new google.maps.LatLng(-30.0346316, -51.21769860000006);
 	var options = {
@@ -29,9 +31,24 @@ function initialize() {
 	    infowindow.open(map, marker);
 	}
 	})(marker))
-	
-	
-	
+}
+
+function dataLoaded(data) {
+    var html = "<div id='nomeCidade'>" + $("#txtCidade").val() + ", 2010</div>";
+    html += "<table id='tabelaDados'>";
+    html += "<thead><td width='25%'><td width='50%'><td width='25%'></thead>";
+    html += "<tbody><tr><th align='left'>Month</th><th align='left'>Type</th><th align='right'>Count</th></tr>";
+    var items = data.value.items;
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        html += "<tr>"
+            + "<td align='left'>" + item.month + "</td>"
+            + "<td align='left'>" + item.type + "</td>"
+            + "<td align='right'>" + item.count + "</td>"
+            + "</tr>";
+    }
+    html += "</tbody></table>";
+    $("#dados").html(html);
 }
 
 $(document).ready(function () {
@@ -41,11 +58,13 @@ $(document).ready(function () {
 	function carregarNoMapa(endereco) {
 		geocoder.geocode({ 'address': endereco + ', Brasil', 'region': 'BR' }, function (results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
-				if (results[0]) {
-					var latitude = results[0].geometry.location.lat();
-					var longitude = results[0].geometry.location.lng();
+			    var result = results[0];
+				if (result) {
+					var latitude = result.geometry.location.lat();
+					var longitude = result.geometry.location.lng();
 		
-					$('#txtEndereco').val(results[0].formatted_address);
+					$('#txtEndereco').val(result.formatted_address);
+					$('#txtCidade').val(result.address_components[0].long_name);
 					$('#txtLatitude').val(latitude);
                    	$('#txtLongitude').val(longitude);
 		
@@ -107,12 +126,28 @@ $(document).ready(function () {
 		event.preventDefault();
 		
 		var endereco = $("#txtEndereco").val();
+		var cidade = $("#txtCidade").val();
 		var latitude = $("#txtLatitude").val();
 		var longitude = $("#txtLongitude").val();
-		
-		alert("Adress: " + endereco + "\nLatitude: " + latitude + "\nLongitude: " + longitude);
-	});
+				
+		if (cidade == null || cidade.length == 0) {
+		    return;
+		}
 
+        $("#dados").html("<div id='nomeCidade'>Loading...</div>");
+    
+        $.ajax({
+           type: 'GET',
+            url: dataUrl + removeDiacritics(cidade),
+            jsonpCallback: 'dataLoaded',
+            contentType: "application/json",
+            dataType: 'jsonp',
+            error: function(e) {
+               alert("Error! " + e);
+            }
+        });
+
+	});
 });
 
 
