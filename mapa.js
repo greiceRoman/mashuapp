@@ -39,11 +39,11 @@ function dataLoaded(data) {
     var html = "<div id='nomeCidade'>" + selecao.cidade + ", 2010</div>";
     html += "<table id='tabelaDados'>";
     html += "<thead><td width='20%'><td width='60%'><td width='20%'></thead>";
-    if (items.length == 0) {
+    var items = data && data.value ? data.value.items : null;
+    if (!items || items.length == 0) {
         html = "<div class='semDados'>No data for this city.<br>Please, select a city in Rio Grande do Sul</div>";
     } else {
         html += "<tbody><tr><th align='left'>Month</th><th align='left'>Type</th><th align='right'>Count</th></tr>";
-        var items = data.value.items;
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             html += "<tr>"
